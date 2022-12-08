@@ -44,6 +44,8 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  // Not Authentication
+  status        Status[]
 }
 
 model VerificationToken {
@@ -52,4 +54,19 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Status {
+  id           String @id @default(uuid())
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  files        File[] 
+  content      String
+  createdAt    DateTime   @default(now())
+}
+model File {
+  id           String @id @default(uuid())
+  location     String
+  statusId     String
+  status       Status     @relation(fields: [statusId], references: [id], onDelete: Cascade)
 }
